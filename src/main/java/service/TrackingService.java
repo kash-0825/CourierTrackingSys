@@ -39,6 +39,13 @@ public class TrackingService {
         if (parcel == null) {
             throw new InvalidParcelException("Parcel not found: " + parcelId);
         }
+        if ("Picked Up".equals(newStatus)
+                && parcel.getAssignedAgentId() == null) {
+
+            throw new InvalidStatusTransitionException(
+                    "An agent must be assigned before the parcel can be picked up."
+            );
+        }
 
         int currentIndex = -1;
 

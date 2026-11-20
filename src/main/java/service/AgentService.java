@@ -42,7 +42,15 @@ public class AgentService {
         Parcel parcel = parcelService.getParcel(parcelId);
 
         if (parcel == null) {
-            throw new InvalidParcelException("Parcel not found: " + parcelId);
+            throw new InvalidParcelException(
+                    "Parcel not found: " + parcelId
+            );
+        }
+
+        if (parcel.getAssignedAgentId() != null) {
+            throw new IllegalStateException(
+                    "An agent is already assigned to this parcel."
+            );
         }
 
         Agent agent = agentQueue.dequeue();

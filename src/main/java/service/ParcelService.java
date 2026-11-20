@@ -25,6 +25,17 @@ public class ParcelService {
      * are generated uniquely by IdGenerator.
      */
     public void addParcel(Parcel parcel) {
+
+        if (parcel == null) {
+            throw new IllegalArgumentException("Parcel cannot be null.");
+        }
+
+        if (parcelMap.containsKey(parcel.getId())) {
+            throw new IllegalArgumentException(
+                    "A parcel with this ID already exists."
+            );
+        }
+
         parcelMap.put(parcel.getId(), parcel);
     }
 

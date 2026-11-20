@@ -45,9 +45,12 @@ public class Parcel {
      * parcel with no real weight makes no physical sense.
      */
     public void setWeight(double weight) {
-        if (weight <= 0) {
-            throw new IllegalArgumentException("Parcel weight must be positive.");
+        if (!Double.isFinite(weight) || weight <= 0) {
+            throw new IllegalArgumentException(
+                    "Parcel weight must be a positive finite number."
+            );
         }
+
         this.weight = weight;
     }
 

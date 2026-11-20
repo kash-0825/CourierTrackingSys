@@ -1,43 +1,67 @@
+
 package service;
 
+import exceptions.InvalidParcelException;
 import model.Parcel;
 import util.IdGenerator;
-import exceptions.InvalidParcelException;
 
-/**
- * BookingService handles the creation and cancellation of parcel bookings.
- * It depends on ParcelService to actually store/retrieve/remove the parcel,
- * and on IdGenerator to assign each new parcel a unique ID.
- */
 public class BookingService {
 
-    private ParcelService parcelService;
+    private final ParcelService parcelService;
+    private final AgentService agentService;
 
-    public BookingService(ParcelService parcelService) {
+    public BookingService(ParcelService parcelService, AgentService agentService) {
         this.parcelService = parcelService;
+        this.agentService = agentService;
     }
 
-    /**
-     * Books a new parcel: generates a unique ID, creates the Parcel object,
-     * and stores it via ParcelService.
-     */
     public Parcel bookParcel(String sender, String receiver, double weight) {
+
+        if (sender == null || sender.trim().isEmpty()) {
+            throw new IllegalArgumentException("Sender name cannot be empty.");
+        }
+
+        if (receiver == null || receiver.trim().isEmpty()) {
+            throw new IllegalArgumentException("Receiver name cannot be empty.");
+        }
+
+        if (!Double.isFinite(weight) || weight <= 0) {
+            throw new IllegalArgumentException(
+                    "Parcel weight must be a positive finite number."
+            );
+        }
+
         String newId = IdGenerator.generateParcelId();
-        Parcel parcel = new Parcel(newId, sender, receiver, weight);
+
+        Parcel parcel = new Parcel(newId, sender.trim(), receiver.trim(), weight);
+
         parcelService.addParcel(parcel);
+
         return parcel;
     }
 
-    /**
-     * Cancels a booking by parcel ID. If the parcel doesn't exist,
-     * ParcelService.removeParcel() returns null — we check for that
-     * and throw InvalidParcelException instead of letting the caller
-     * silently think the cancellation worked.
-     */
     public void cancelParcel(String parcelId) throws InvalidParcelException {
-        Parcel removed = parcelService.removeParcel(parcelId);
-        if (removed == null) {
-            throw new InvalidParcelException("No parcel found with ID: " + parcelId);
+
+        Parcel parcel = parcelService.getParcel(parcelId);
+
+        if (parcel == null) {
+            throw new InvalidParcelException(
+                    "No parcel found with ID: " + parcelId
+            );
         }
+
+        if (!"Booked".equals(parcel.getStatus())) {
+            throw new IllegalStateException(
+                    "Only parcels with Booked status can be cancelled."
+            );
+        }
+
+        String agentId = parcel.getAssignedAgentId();
+
+        if (agentId != null) {
+            agentService.releaseAgent(agentId);
+        }
+
+        parcelService.removeParcel(parcelId);
     }
 }

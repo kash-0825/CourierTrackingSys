@@ -26,8 +26,12 @@ public class Main {
     public static void main(String[] args) {
 
         ParcelService parcelService = new ParcelService();
-        BookingService bookingService = new BookingService(parcelService);
+
         AgentService agentService = new AgentService(parcelService);
+
+        BookingService bookingService =
+                new BookingService(parcelService, agentService);
+
         TrackingService trackingService =
                 new TrackingService(parcelService, agentService);
 
@@ -134,11 +138,32 @@ public class Main {
     }
 
     private static void registerAgent(AgentService agentService) {
-        System.out.print("Enter agent name: ");
-        String name = sc.nextLine();
 
-        System.out.print("Enter agent contact: ");
-        String contact = sc.nextLine();
+        String name;
+
+        while (true) {
+            System.out.print("Enter agent name: ");
+            name = sc.nextLine().trim();
+
+            if (name.matches("[A-Za-z]+(?:[ .'-][A-Za-z]+)*")) {
+                break;
+            }
+
+            System.out.println("Invalid name! Enter alphabets only.");
+        }
+
+        String contact;
+
+        while (true) {
+            System.out.print("Enter agent contact: ");
+            contact = sc.nextLine().trim();
+
+            if (contact.matches("[0-9]{10}")) {
+                break;
+            }
+
+            System.out.println("Invalid contact! Enter a 10-digit phone number.");
+        }
 
         Agent agent = agentService.registerAgent(name, contact);
 
@@ -155,7 +180,7 @@ public class Main {
             System.out.println("Agent assigned successfully!");
             System.out.println("Assigned agent: " + agent.getName());
             System.out.println("Agent ID: " + agent.getId());
-        } catch (InvalidParcelException | NoAgentAvailableException e) {
+        } catch (InvalidParcelException | NoAgentAvailableException | IllegalStateException e) {
             System.out.println("Assignment failed: " + e.getMessage());
         }
     }
@@ -238,7 +263,7 @@ public class Main {
         try {
             bookingService.cancelParcel(parcelId);
             System.out.println("Parcel cancelled successfully!");
-        } catch (InvalidParcelException e) {
+        } catch (InvalidParcelException | IllegalStateException e) {
             System.out.println("Cancellation failed: " + e.getMessage());
         }
     }
