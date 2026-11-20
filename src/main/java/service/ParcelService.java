@@ -20,8 +20,9 @@ public class ParcelService {
 
     /**
      * Adds a new parcel to the system using its ID as the key.
-     * If a parcel with the same ID already exists, it will be silently overwritten; this should never happen
-     * in practice since IDs are generated uniquely by IdGenerator.
+     * If a parcel with the same ID already exists, it will be silently
+     * overwritten — this should never happen in practice since IDs
+     * are generated uniquely by IdGenerator.
      */
     public void addParcel(Parcel parcel) {
         parcelMap.put(parcel.getId(), parcel);
@@ -35,5 +36,14 @@ public class ParcelService {
      */
     public Parcel getParcel(String parcelId) {
         return parcelMap.get(parcelId);
+    }
+    /**
+     * Removes a parcel from the system by its ID — used when a booking
+     * is cancelled. Returns the removed Parcel so the calling service
+     * (BookingService) can confirm what was deleted, or null if no
+     * parcel with that ID existed.
+     */
+    public Parcel removeParcel(String parcelId) {
+        return parcelMap.remove(parcelId);
     }
 }
