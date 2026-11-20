@@ -17,4 +17,23 @@ public class ParcelService {
     public ParcelService() {
         this.parcelMap = new HashMap<>();
     }
+
+    /**
+     * Adds a new parcel to the system using its ID as the key.
+     * If a parcel with the same ID already exists, it will be silently overwritten; this should never happen
+     * in practice since IDs are generated uniquely by IdGenerator.
+     */
+    public void addParcel(Parcel parcel) {
+        parcelMap.put(parcel.getId(), parcel);
+    }
+
+    /**
+     * Retrieves a parcel by its ID.
+     * Returns null if no parcel with that ID exists — callers (like
+     * BookingService or TrackingService) are responsible for checking
+     * this and throwing InvalidParcelException if needed.
+     */
+    public Parcel getParcel(String parcelId) {
+        return parcelMap.get(parcelId);
+    }
 }
