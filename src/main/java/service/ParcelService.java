@@ -1,5 +1,5 @@
 package service;
-
+import java.util.ArrayList;
 import model.Parcel;
 import java.util.HashMap;
 
@@ -45,5 +45,8 @@ public class ParcelService {
      */
     public Parcel removeParcel(String parcelId) {
         return parcelMap.remove(parcelId);
+    }
+    public ArrayList<Parcel> getAllParcels() {
+        return new ArrayList<>(parcelMap.values());
     }
 }
