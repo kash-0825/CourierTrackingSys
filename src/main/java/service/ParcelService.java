@@ -60,4 +60,22 @@ public class ParcelService {
     public ArrayList<Parcel> getAllParcels() {
         return new ArrayList<>(parcelMap.values());
     }
+
+    /**
+     * Searches parcels where the sender or receiver contains the specified keyword (case-insensitive).
+     */
+    public ArrayList<Parcel> searchParcels(String query) {
+        ArrayList<Parcel> results = new ArrayList<>();
+        if (query == null || query.trim().isEmpty()) {
+            return results;
+        }
+        String lowerQuery = query.trim().toLowerCase();
+        for (Parcel parcel : parcelMap.values()) {
+            if (parcel.getSender().toLowerCase().contains(lowerQuery) ||
+                parcel.getReceiver().toLowerCase().contains(lowerQuery)) {
+                results.add(parcel);
+            }
+        }
+        return results;
+    }
 }

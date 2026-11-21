@@ -11,6 +11,7 @@ A console-based Courier and Parcel Tracking System developed in Java for Team N.
 - **Tracking History:** View parcel status updates along with their timestamps.
 - **Parcel Cancellation:** Cancel parcels that are still in the Booked state.
 - **Parcel and Agent Listing:** View all registered parcels and delivery agents.
+- **Parcel Search:** Search parcels by sender or receiver name.
 - **Input Validation:** Handle invalid inputs, duplicate assignments, unavailable agents, and invalid status transitions.
 
 ## Technologies and Concepts Used
@@ -99,6 +100,7 @@ Once the application starts, the following menu is displayed:
 6. View all parcels
 7. Cancel a parcel
 8. View all agents
+9. Search parcels by sender or receiver
 0. Exit
 ```
 
