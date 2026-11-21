@@ -47,6 +47,7 @@ public class Main {
             System.out.println("6. View all parcels");
             System.out.println("7. Cancel a parcel");
             System.out.println("8. View all agents");
+            System.out.println("9. Search parcels by sender or receiver");
             System.out.println("0. Exit");
 
             choice = readInt("Enter your choice: ");
@@ -82,6 +83,10 @@ public class Main {
 
                 case 8:
                     viewAllAgents(agentService);
+                    break;
+
+                case 9:
+                    searchParcels(parcelService);
                     break;
 
                 case 0:
@@ -280,6 +285,23 @@ public class Main {
         for (Agent agent : agents) {
             agent.displayInfo();
             System.out.println("--------------------");
+        }
+    }
+
+    private static void searchParcels(ParcelService parcelService) {
+        System.out.print("Enter sender or receiver name to search: ");
+        String query = sc.nextLine().trim();
+
+        ArrayList<Parcel> results = parcelService.searchParcels(query);
+
+        if (results.isEmpty()) {
+            System.out.println("No parcels found matching: " + query);
+            return;
+        }
+
+        System.out.println("\nMatching Parcels (" + results.size() + "):");
+        for (Parcel parcel : results) {
+            System.out.println(parcel);
         }
     }
 }
